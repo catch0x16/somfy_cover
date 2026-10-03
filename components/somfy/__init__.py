@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import remote_receiver, remote_transmitter
+from esphome.components import remote_base, remote_receiver
 from esphome.const import CONF_ID, CONF_TYPE, PLATFORM_ESP32
 
 CODEOWNERS = ["@LeonardPitzu"]
@@ -9,7 +9,7 @@ DEPENDENCIES = ["esp32"]
 # and the same RX implementation is also used to model a native MY recall. Load
 # the lightweight text_sensor base unconditionally so every valid combination
 # of those optional fields has its C++ headers available.
-AUTO_LOAD = ["button", "text_sensor"]
+AUTO_LOAD = ["button", "remote_base", "text_sensor"]
 MULTI_CONF = True
 
 DOMAIN = "somfy"
@@ -29,8 +29,9 @@ TYPE_IOHC = "iohc"
 RTS_HUB_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(SomfyRtsHub),
+        # Any transmitter, e.g. a remote_transmitter or a shared_transmitter.
         cv.Required(CONF_REMOTE_TRANSMITTER): cv.use_id(
-            remote_transmitter.RemoteTransmitterComponent
+            remote_base.RemoteTransmitterBase
         ),
         cv.Optional(CONF_REMOTE_RECEIVER): cv.use_id(
             remote_receiver.RemoteReceiverComponent

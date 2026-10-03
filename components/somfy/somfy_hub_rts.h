@@ -5,7 +5,6 @@
 #ifdef USE_SOMFY_RTS
 
 #include "esphome/core/component.h"
-#include "esphome/components/remote_transmitter/remote_transmitter.h"
 // remote_base rather than remote_receiver: RemoteReceiverBase is what carries
 // register_listener, and it is auto-loaded with the transmitter. ESPHome only
 // copies a component's sources into the build when the YAML uses it, so
@@ -70,7 +69,7 @@ class SomfyRtsHub : public Component, public remote_base::RemoteReceiverListener
   void dump_config() override;
 
   // Configuration
-  void set_remote_transmitter(remote_transmitter::RemoteTransmitterComponent *t) {
+  void set_remote_transmitter(remote_base::RemoteTransmitterBase *t) {
     this->remote_transmitter_ = t;
   }
   void set_remote_receiver(remote_base::RemoteReceiverBase *r) { this->remote_receiver_ = r; }
@@ -86,7 +85,7 @@ class SomfyRtsHub : public Component, public remote_base::RemoteReceiverListener
   bool on_receive(remote_base::RemoteReceiveData data) override;
 
  protected:
-  remote_transmitter::RemoteTransmitterComponent *remote_transmitter_{nullptr};
+  remote_base::RemoteTransmitterBase *remote_transmitter_{nullptr};
 
   remote_base::RemoteReceiverBase *remote_receiver_{nullptr};
   std::vector<RtsRxCallback> rx_callbacks_;
